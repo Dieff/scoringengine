@@ -1,5 +1,5 @@
 ---
-version: '3.7'
+version: '3.3'
 services:
   redis:
     image: "redis:latest"
@@ -13,8 +13,6 @@ services:
       - redis:/data
     networks:
       - default
-    # ports:
-    #   - 6379:6379
   mysql:
     image: mysql:5
     environment:
@@ -25,29 +23,6 @@ services:
     restart: on-failure
     volumes:
       - mysql:/var/lib/mysql
-    networks:
-      - default
-    # ports:
-    #   - 3306:3306
-  nginx:
-    image: scoringengine/nginx
-    build:
-      context: .
-      dockerfile: ./docker/nginx/Dockerfile
-      cache_from:
-        - scoringengine/nginx
-        - nginx:latest
-    depends_on:
-      - web
-    ports:
-      - 80:80
-      - 443:443
-    healthcheck:
-      test: ["CMD", "curl", "-f", "localhost"]
-      interval: 30s
-      timeout: 3s
-      retries: 10
-    restart: on-failure
     networks:
       - default
   base:
@@ -130,6 +105,8 @@ services:
       timeout: 3s
       retries: 10
     restart: on-failure
+    ports:
+      - "80:5000"
     networks:
       - default
     environment:
@@ -141,3 +118,4 @@ volumes:
 
 networks:
   default:
+
